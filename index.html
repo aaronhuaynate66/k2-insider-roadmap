@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K2 · Insider Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a26;
+  --border: rgba(255,255,255,0.07); --text: #e8e8f0; --muted: #6b6b8a; --dim: #3a3a55;
+  --navy: #0B1E3D; --gold: #C8A84B; --blue: #1A3A6B; --lblue: #2A7FBF;
+  --green: #1d9e75; --amber: #ef9f27; --red: #e24b4a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+  background-size: 40px 40px;
+}
+.wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 48px 32px 80px; }
+
+/* HEADER */
+.logo-line { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.logo-badge { background: linear-gradient(135deg,var(--gold),#e8d48a); color: var(--navy); font-family: 'Syne',sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .1em; padding: 4px 12px; border-radius: 4px; }
+.version { color: var(--muted); font-size: 11px; }
+h1 { font-family: 'Syne',sans-serif; font-size: clamp(24px,3.5vw,40px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; color: #fff; margin-bottom: 10px; }
+h1 span { color: var(--gold); }
+.subtitle { color: var(--muted); font-size: 12px; line-height: 1.6; max-width: 560px; margin-bottom: 8px; }
+.deadline-bar { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; color: var(--amber); background: rgba(239,159,39,.08); border: 1px solid rgba(239,159,39,.2); padding: 5px 12px; border-radius: 20px; margin-bottom: 32px; }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 32px; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.stat-n { font-family: 'Syne',sans-serif; font-size: 24px; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+.stat-l { font-size: 10px; color: var(--muted); letter-spacing: .06em; }
+
+/* PHASES */
+.phase-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 14px; }
+.phase-divider-line { flex: 1; height: 1px; background: var(--border); }
+.phase-divider-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+
+/* CARDS */
+.rm-phase { margin-bottom: 6px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.rm-head { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--surface); }
+.rm-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.rm-title { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
+.rm-sprint { font-size: 10px; color: var(--dim); margin-right: 8px; }
+.badge { font-size: 10px; padding: 3px 9px; border-radius: 4px; font-weight: 500; letter-spacing: .04em; }
+.b-done   { background: rgba(29,158,117,.15); color: #1d9e75; }
+.b-active { background: rgba(239,159,39,.15); color: #ef9f27; }
+.b-todo   { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.b-block  { background: rgba(226,75,74,.12); color: #e24b4a; }
+.rm-body { padding: 12px 18px 14px; border-top: 1px solid var(--border); background: var(--surface2); }
+.task-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.task { display: flex; align-items: flex-start; gap: 8px; font-size: 11px; line-height: 1.5; }
+.task-icon { flex-shrink: 0; margin-top: 1px; font-size: 13px; }
+.task-text { color: var(--muted); }
+.task-text strong { color: var(--text); font-weight: 500; }
+.dep { display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 3px; background: rgba(226,75,74,.12); color: #e24b4a; margin-left: 4px; }
+.note { display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 3px; background: rgba(239,159,39,.12); color: #ef9f27; margin-left: 4px; }
+.bar { height: 3px; background: var(--border); border-radius: 2px; margin: 10px 0 3px; }
+.bar-fill { height: 100%; border-radius: 2px; }
+.bar-label { font-size: 10px; color: var(--dim); text-align: right; }
+
+/* JOURNEY PREVIEW */
+.journey-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(200,168,75,.3); background: rgba(200,168,75,.06); color: var(--gold); margin: 4px 4px 0 0; }
+
+/* TIMELINE */
+.timeline { display: flex; gap: 0; margin: 20px 0; overflow-x: auto; padding-bottom: 4px; }
+.tl-item { flex: 1; min-width: 120px; position: relative; }
+.tl-item::before { content: ''; position: absolute; top: 16px; left: 50%; right: -50%; height: 2px; background: var(--border); z-index: 0; }
+.tl-item:last-child::before { display: none; }
+.tl-dot { width: 14px; height: 14px; border-radius: 50%; margin: 9px auto 8px; position: relative; z-index: 1; border: 2px solid; }
+.tl-sprint { font-size: 9px; color: var(--dim); text-align: center; letter-spacing: .04em; margin-bottom: 4px; }
+.tl-label { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.4; padding: 0 4px; }
+.tl-done .tl-dot { background: var(--green); border-color: var(--green); }
+.tl-active .tl-dot { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 3px rgba(239,159,39,.2); }
+.tl-todo .tl-dot { background: var(--surface2); border-color: var(--border); }
+
+.you-are-here { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--amber); background: rgba(239,159,39,.08); border: 1px solid rgba(239,159,39,.2); padding: 5px 12px; border-radius: 20px; margin-bottom: 20px; }
+.updated { font-size: 10px; color: var(--dim); text-align: right; margin-top: 32px; }
+
+/* CONTEXT BOX */
+.context-box { background: var(--surface); border: 1px solid rgba(200,168,75,.2); border-left: 3px solid var(--gold); border-radius: 10px; padding: 16px 20px; margin-bottom: 28px; }
+.context-box h3 { font-family: 'Syne',sans-serif; font-size: 13px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+.context-box p { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.context-box p strong { color: var(--text); }
+
+@media(max-width:600px){ .wrap{padding:24px 16px 60px} .stats{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo-line">
+    <span class="logo-badge">K2</span>
+    <span class="version">Insider Config Roadmap · v1.0 · 2026</span>
+  </div>
+  <h1>K2 Seguridad · <span>Insider</span><br>Implementation Roadmap</h1>
+  <p class="subtitle">Implementación completa de Insider para K2 Seguridad y Resguardo SAC. Plataforma B2B con journey de nurturing para leads del sector minería, logística y salud.</p>
+  <div class="deadline-bar">⚑ Deadline épica: Jun 30 · Épica GYM-1677 · Owner: Aaron</div>
+</header>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-n">9</div><div class="stat-l">Tickets en Jira</div></div>
+  <div class="stat"><div class="stat-n">1</div><div class="stat-l">Completado</div></div>
+  <div class="stat"><div class="stat-n">S18–S21</div><div class="stat-l">Sprints activos</div></div>
+  <div class="stat"><div class="stat-n">Jun 30</div><div class="stat-l">Deadline</div></div>
+</div>
+
+<!-- CONTEXT -->
+<div class="context-box">
+  <h3>Contexto del proyecto</h3>
+  <p><strong>K2 Seguridad y Resguardo SAC</strong> — empresa de seguridad privada B2B, 7+ años en Perú. Sectores: minería, logística, agroindustria, salud.<br>
+  <strong>Cuenta Insider:</strong> k2aimo.inone.useinsider.com · Partner: k2aimo<br>
+  <strong>Sitios a instrumentar:</strong> k2.com.pe (WordPress) + mineria.k2.com.pe (landing captura leads)<br>
+  <strong>Journey objetivo:</strong> Nurturing B2B con 3 ramas conductuales — Analítico (CFO), Reactivo (Ops), Conservador (Dirección)</p>
+</div>
+
+<!-- YOU ARE HERE -->
+<div class="you-are-here">⊙ Estás aquí — S18 · DNS + SDK pendientes</div>
+
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="tl-item tl-done">
+    <div class="tl-dot"></div>
+    <div class="tl-sprint">S17</div>
+    <div class="tl-label">Cuenta<br>creada ✓</div>
+  </div>
+  <div class="tl-item tl-active">
+    <div class="tl-dot"></div>
+    <div class="tl-sprint">S18 · ahora</div>
+    <div class="tl-label">DNS +<br>SDK install</div>
+  </div>
+  <div class="tl-item tl-todo">
+    <div class="tl-dot"></div>
+    <div class="tl-sprint">S19</div>
+    <div class="tl-label">Journey<br>diseño</div>
+  </div>
+  <div class="tl-item tl-todo">
+    <div class="tl-dot"></div>
+    <div class="tl-sprint">S20</div>
+    <div class="tl-label">Emails +<br>Architect</div>
+  </div>
+  <div class="tl-item tl-todo">
+    <div class="tl-dot"></div>
+    <div class="tl-sprint">S21</div>
+    <div class="tl-label">Onsite +<br>QA + Launch</div>
+  </div>
+</div>
+
+<!-- FASE 0 -->
+<div class="phase-divider"><div class="phase-divider-line"></div><div class="phase-divider-label">Fase 0 — Cuenta y accesos</div><div class="phase-divider-line"></div></div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--green)"></span>
+    <span class="rm-title">GYM-1838 · Cuenta Insider K2 creada y configurada</span>
+    <span class="rm-sprint">S17</span>
+    <span class="badge b-done">✓ Finalizada</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">✓</span><span class="task-text">Cuenta activa: k2aimo.inone.useinsider.com</span></li>
+      <li class="task"><span class="task-icon">✓</span><span class="task-text">Partner name: k2aimo · Tag URL documentada</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Obtener partnerId exacto de Account Settings → IN ONE</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Verificar módulos Email, Web Push y Onsite habilitados</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:50%;background:var(--green)"></div></div>
+    <div class="bar-label">2 / 4 · pendientes: partnerId + verificar módulos</div>
+  </div>
+</div>
+
+<!-- FASE 1 -->
+<div class="phase-divider"><div class="phase-divider-line"></div><div class="phase-divider-label">Fase 1 — Instalación técnica · Sprint 18–19</div><div class="phase-divider-line"></div></div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--amber)"></span>
+    <span class="rm-title">GYM-1839 · Configuración DNS — SPF, DKIM, DMARC</span>
+    <span class="rm-sprint">S18 · due 26/05</span>
+    <span class="badge b-active">Esta semana</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Agregar registro SPF en DNS del dominio K2</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Configurar DKIM en Insider + verificar en DNS</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Política DMARC configurada (p=none + reporting)</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Test de inbox placement >95% — Mail Tester score >9/10</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--amber)"></div></div>
+    <div class="bar-label">0 / 4 · estimación 4h · owner: Aaron</div>
+  </div>
+</div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--amber)"></span>
+    <span class="rm-title">GYM-1840 · Instalación SDK en k2.com.pe + mineria.k2.com.pe + formulario</span>
+    <span class="rm-sprint">S19 · due 02/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Parte 1:</strong> Insider Tag en k2.com.pe vía GTM o Insert Headers plugin</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Parte 2:</strong> Insider Tag en mineria.k2.com.pe + InsiderQueue por tipo de página</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Parte 3:</strong> Integración formulario → evento lead_captured + atributos (RUC, puesto, sector, empresa)</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Parte 4:</strong> Crear atributos custom en InOne + 8 segmentos base activos</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--amber)"></div></div>
+    <div class="bar-label">0 / 4 partes · estimación 12h · owner: Aaron <span class="dep">Dep: GYM-1839</span></div>
+  </div>
+</div>
+
+<!-- FASE 2 -->
+<div class="phase-divider"><div class="phase-divider-line"></div><div class="phase-divider-label">Fase 2 — Journey y contenido · Sprint 19–20</div><div class="phase-divider-line"></div></div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--dim)"></span>
+    <span class="rm-title">GYM-1842 · Diseño estratégico del journey de nurturing B2B</span>
+    <span class="rm-sprint">S19 · due 02/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Trigger: evento lead_captured desde formulario mineria.k2.com.pe</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">3 ramas conductuales: Analítico (CFO) · Reactivo (Ops) · Conservador (Dirección)</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">4 emails por rama (bienvenida → educativo → caso éxito → CTA comercial)</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Web Push paralelo + experiencias Onsite definidas</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Journey aprobado por K2 antes del 02/06</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--dim)"></div></div>
+    <div class="bar-label">0 / 5 · estimación 6h · owner: Aaron <span class="dep">Dep: GYM-1840</span></div>
+  </div>
+</div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--dim)"></span>
+    <span class="rm-title">GYM-1841 · Diseño de 4 plantillas de email para nurturing B2B</span>
+    <span class="rm-sprint">S20 · due 16/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Email 1:</strong> Bienvenida — credibilidad K2 + certificaciones (ISO 9001, BASC, etc.)</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Email 2:</strong> Educativo — ROI y costo real de incidente de seguridad</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Email 3:</strong> Caso de éxito — métricas reales por sector</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text"><strong>Email 4:</strong> CTA comercial — agendar reunión de 20 minutos</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--dim)"></div></div>
+    <div class="bar-label">0 / 4 · estimación 10h · owner: Aeylin <span class="dep">Dep: GYM-1842</span></div>
+  </div>
+</div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--dim)"></span>
+    <span class="rm-title">GYM-1843 · Configuración del journey en Insider Architect</span>
+    <span class="rm-sprint">S20 · due 16/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Journey creado en Insider Architect con trigger lead_captured</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">4 emails con delays y condiciones de comportamiento (apertura, clic)</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Ramificación por perfil: Analítico · Reactivo · Conservador</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Test end-to-end pasado sin errores</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--dim)"></div></div>
+    <div class="bar-label">0 / 4 · estimación 12h · owner: Aaron <span class="dep">Dep: GYM-1841, GYM-1842</span></div>
+  </div>
+</div>
+
+<!-- FASE 3 -->
+<div class="phase-divider"><div class="phase-divider-line"></div><div class="phase-divider-label">Fase 3 — Canales adicionales · Sprint 20–21</div><div class="phase-divider-line"></div></div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--dim)"></span>
+    <span class="rm-title">GYM-1844 · Web Push Notifications y automatizaciones de reactivación</span>
+    <span class="rm-sprint">S20 · due 16/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Prompt de suscripción opt-in configurado en k2.com.pe · objetivo >5% conversión</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Push 1 (24h): visitante /servicios sin convertir → reactivación</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Push 2 (día 5): lead que no abrió emails → oferta directa</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--dim)"></div></div>
+    <div class="bar-label">0 / 3 · estimación 6h · owner: Aaron</div>
+  </div>
+</div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--dim)"></span>
+    <span class="rm-title">GYM-1845 · Onsite Personalization — popups, banners y exit intent</span>
+    <span class="rm-sprint">S21 · due 30/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Popup captura de lead en /servicios (trigger 30s) · objetivo >3% conversión</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Banner personalizado para leads ya conocidos → "Agenda una demo"</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Exit intent popup con oferta de valor (ebook / caso de estudio)</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--dim)"></div></div>
+    <div class="bar-label">0 / 3 · estimación 8h · owner: Aaron</div>
+  </div>
+</div>
+
+<!-- FASE 4 -->
+<div class="phase-divider"><div class="phase-divider-line"></div><div class="phase-divider-label">Fase 4 — QA y lanzamiento · Sprint 21</div><div class="phase-divider-line"></div></div>
+
+<div class="rm-phase">
+  <div class="rm-head">
+    <span class="rm-dot" style="background:var(--dim)"></span>
+    <span class="rm-title">GYM-1846 · QA completo, pruebas end-to-end y lanzamiento oficial</span>
+    <span class="rm-sprint">S21 · due 30/06</span>
+    <span class="badge b-todo">Pendiente</span>
+  </div>
+  <div class="rm-body">
+    <ul class="task-list">
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Journey email testeado end-to-end con contacto de prueba real</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Web Push y Onsite verificados en Chrome y Safari</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Primeros 10 leads reales ingresados y monitoreados 48h</span></li>
+      <li class="task"><span class="task-icon">○</span><span class="task-text">Reporte de lanzamiento entregado a K2 con métricas iniciales</span></li>
+    </ul>
+    <div class="bar"><div class="bar-fill" style="width:0%;background:var(--dim)"></div></div>
+    <div class="bar-label">0 / 4 · estimación 8h · owner: Aaron · <span class="dep">Depende de todo lo anterior</span></div>
+  </div>
+</div>
+
+<!-- JOURNEY PREVIEW -->
+<div class="phase-divider"><div class="phase-divider-line"></div><div class="phase-divider-label">Journey de nurturing B2B — arquitectura</div><div class="phase-divider-line"></div></div>
+
+<div style="background:var(--surface);border:1px solid rgba(200,168,75,.2);border-radius:12px;padding:20px 24px;margin-bottom:8px">
+  <div style="font-size:11px;color:var(--gold);font-family:'Syne',sans-serif;font-weight:700;margin-bottom:12px">Journey K2 · Nurturing B2B · Trigger: lead_captured</div>
+  <div style="font-size:11px;color:var(--muted);line-height:1.8">
+    <strong style="color:var(--text)">Trigger:</strong> Formulario mineria.k2.com.pe enviado → evento lead_captured<br>
+    <strong style="color:var(--text)">Bifurcación por puesto:</strong><br>
+    &nbsp;&nbsp;→ <span style="color:var(--gold)">Analítico</span> (CFO / Dir. Financiero) — enfoque ROI y datos<br>
+    &nbsp;&nbsp;→ <span style="color:var(--gold)">Reactivo</span> (Gerente Ops / COO) — enfoque urgencia y activación rápida<br>
+    &nbsp;&nbsp;→ <span style="color:var(--gold)">Conservador</span> (Director / Gerente Gral.) — enfoque certificaciones y referencias<br>
+    <strong style="color:var(--text)">Secuencia:</strong> Email 1 (inmediato) → Email 2 (día 3) → Email 3 (día 7) → Email 4 CTA (día 14)<br>
+    <strong style="color:var(--text)">Canales paralelos:</strong> Web Push reactivación + Onsite personalization<br>
+    <strong style="color:var(--text)">KPIs objetivo:</strong> Open rate >28% · CTR >4% · Conversión a reunión >8%
+  </div>
+</div>
+
+<div class="updated">Última actualización: 20 May 2026 · GYM-1677 · 9 tickets · S18–S21 · Actualizado por Claude</div>
+
+</div>
+</body>
+</html>
